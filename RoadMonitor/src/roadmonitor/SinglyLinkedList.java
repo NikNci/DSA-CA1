@@ -59,6 +59,9 @@ public class SinglyLinkedList implements SLLInterface{
         size++;
     }
     
+    //I sort of re-invented the wheel here with how this method works, but
+    //it was necessary as the usual method I was taught in class did not account
+    //for index values greater than the size of the list. 
     public void setCurrent(int index){
         curr = head.getNext();
         prev = head;
