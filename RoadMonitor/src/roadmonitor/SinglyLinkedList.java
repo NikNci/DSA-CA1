@@ -47,24 +47,44 @@ public class SinglyLinkedList implements SLLInterface{
         Node newNode = new Node(iss);
         if (isEmpty()){
             head=newNode;
-        }else if (index==1){
-            head.setNext(newNode);
+            head.setNext(null);
+        }else if(index==1){
+            newNode.setNext(head);
             head=newNode;
         }else{
             setCurrent(index);
-            prev.setNext(newNode);
             newNode.setNext(curr);
+            prev.setNext(newNode);
         }
+        size++;
     }
     
     public void setCurrent(int index){
-        curr = head;
-        prev = null;
-        for (int i=1;i<index;i++){
-            prev = curr;
+        curr = head.getNext();
+        prev = head;
+        while (curr!=null){
+            if(prev.getData().getPriority()<index && index<curr.getData().getPriority()){
+                break;
+            }
+            prev=curr;
+            curr=curr.getNext();
+            
+        }
+    }
+    
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        curr=head;
+        for (int i = 0; i<size ; i++){
+            sb.append(curr.getData().getDescription());
+            sb.append(", priority ");
+            sb.append(curr.getData().getPriority());
+            sb.append("\n");
             curr=curr.getNext();
         }
-
+        
+        return sb.toString();
     }
     
 }
