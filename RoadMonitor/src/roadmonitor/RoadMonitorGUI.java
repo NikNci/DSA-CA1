@@ -16,17 +16,16 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
      * Creates new form RoadMonitorGUI
      */
     public RoadMonitorGUI() {
+        //initialisation order is very strict
         initComponents();
         issueList = new PriorityQueue();
         historyList = new Stack();
         
         loadDemoData();
         viewTrafficMode();
-
-        
     }
     
-    //misc methods
+    //misc methods below. All functionality is handled by these methods rather than by the buttons themselves
 
     /**
      * sets the GUI to let the user see issues affecting traffic
@@ -41,11 +40,10 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
         addBTN.setVisible(false);
         EventTypeLBL.setVisible(false);
         popBTN.setVisible(true);
-        
         statusLBL.setVisible(true);
         statusIndicatorTF.setVisible(true);
-        displayTA.setText("Current traffic events in Docklands:\n\n");
         
+        displayTA.setText("Current traffic events in Docklands:\n\n");
         updateView();
     }
     
@@ -62,11 +60,10 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
         addBTN.setVisible(true);
         EventTypeLBL.setVisible(true);
         popBTN.setVisible(false);
-        
         statusLBL.setVisible(false);
         statusIndicatorTF.setVisible(false);
-        displayTA.setText("Most Recent traffic event that has ended:\n\n");
         
+        displayTA.setText("Most Recent traffic event that has ended:\n\n");
         updateView();
     }
     
@@ -75,7 +72,6 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
      */
     public void logIssue(){
         int priorityKey;
-        
         if(weatherWarningBTN.isSelected()){
             priorityKey=1;
         }
@@ -91,9 +87,7 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
         else{
             priorityKey=5;
         }
-        
         Issue newIssue = new Issue(eventDescTF.getText(),priorityKey);
-        
         issueList.enqueue(newIssue);
     }
     
