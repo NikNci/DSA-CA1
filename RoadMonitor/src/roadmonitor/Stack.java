@@ -52,7 +52,7 @@ public class Stack implements StackInterface{
     }
 
     @Override
-    public Issue Peek() {
+    public Issue peek() {
         return head.getData();
     }
     

@@ -15,11 +15,12 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
      */
     public RoadMonitorGUI() {
         initComponents();
-        
-        viewTrafficMode();
         issueList = new PriorityQueue();
         historyList = new Stack();
+        
         loadDemoData();
+        viewTrafficMode();
+
         
     }
     
@@ -41,6 +42,8 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
         statusLBL.setVisible(true);
         statusIndicatorTF.setVisible(true);
         displayTA.setText("Current traffic events in Docklands:\n\n");
+        
+        updateView();
     }
     
     /**
@@ -58,36 +61,72 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
         
         statusLBL.setVisible(false);
         statusIndicatorTF.setVisible(false);
-        displayTA.setText("History of traffic events in Docklands:\n\n");
+        displayTA.setText("Most Recent traffic event that has ended:\n\n");
+        
+        updateView();
     }
     
     /**
      * For adding a current issue to the priority queue
      */
     public void logIssue(){
-        //todo
+        int priorityKey;
+        
+        if(weatherWarningBTN.isSelected()){
+            priorityKey=1;
+        }
+        else if(emergencyBTN.isSelected()){
+            priorityKey=2;
+        }  
+        else if(constructionBTN.isSelected()){
+            priorityKey=4;
+        }
+        else if(eventBTN.isSelected()){
+            priorityKey=3;
+        }
+        else{
+            priorityKey=5;
+        }
+        
+        Issue newIssue = new Issue(eventDescTF.getText(),priorityKey);
+        
+        issueList.enqueue(newIssue);
     }
     
     /**
      * dequeue the top current traffic issue
      */
     public void dequeueIssue(){
-        //todo
+        //issueList.peek() returns top
+        //put that into stack
+        historyList.push(issueList.peek());
+        //dequeue theList
+        issueList.dequeue();
     }
     
     /**
      * Fabricates some existing data into the ADTs for the purpose of testing and showing that it works quickly. Better
      * than hardcoding the data into the ADTs obviously.
+     * In a real world scenario, this would be loading data from a file or database.
      */
     public void loadDemoData(){
-        //todo
+        Issue i = new Issue("Orange Flood Weather Warning for the Dublin Area",1);
+        issueList.enqueue(i);
+        
+        Issue p = new Issue("Saint Patrick's day parade",3);
+        historyList.push(p);
     }
     
     /**
      * TO be called after any kind of change to ADTs so that the user has up-to-date data on the dashboard.
      */
-    public void updateview(){
-        //todo
+    public void updateView(){
+        if (ViewIssuesBTN.isSelected()){
+            displayTA.append(issueList.printList());
+        }else{
+            String toShow = historyList.peek().getDescription() + ", it had a priority impact level of " + historyList.peek().getPriority();
+            displayTA.append(toShow);
+        }
     }
     
     /**
@@ -225,10 +264,11 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
                         .addComponent(statusIndicatorTF, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(LogIssuesBTN)
@@ -245,7 +285,6 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
                                                 .addComponent(weatherWarningBTN)
                                                 .addGap(4, 4, 4))))))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(52, 52, 52)
                                 .addComponent(addBTN)
                                 .addGap(0, 0, Short.MAX_VALUE))))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -312,7 +351,7 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_miscBTNActionPerformed
 
     private void addBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBTNActionPerformed
-        // TODO add your handling code here:
+        logIssue();
     }//GEN-LAST:event_addBTNActionPerformed
 
     private void eventDescTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventDescTFActionPerformed

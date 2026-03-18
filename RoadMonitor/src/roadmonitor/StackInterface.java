@@ -9,5 +9,5 @@ public interface StackInterface {
     public int size();
     public void push(Issue i);
     public void pop();
-    public Issue Peek();
+    public Issue peek();
 }

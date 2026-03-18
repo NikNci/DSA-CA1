@@ -28,6 +28,14 @@ public class SinglyLinkedList implements SLLInterface{
         setCurrent(index);
         return curr.getData();
     }
+    
+    /**
+     *
+     * get() only really works on getting curr that is NOT head, so there must be a separate method
+     */
+    public Issue getTop(){
+        return head.getData();
+    }
 
     //as this is for priority queue, no need to bother with index when removing
     @Override
@@ -75,11 +83,16 @@ public class SinglyLinkedList implements SLLInterface{
         }
     }
     
+    /**
+     *
+     * This method is for outputting a list of all traffic events
+     */
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
         curr=head;
         for (int i = 0; i<size ; i++){
+            sb.append((i+1) + ". ");
             sb.append(curr.getData().getDescription());
             sb.append(", priority ");
             sb.append(curr.getData().getPriority());
