@@ -6,7 +6,9 @@ package roadmonitor;
  */
 public class RoadMonitorApp {
     public static void main(String[] args) {
-        RoadMonitorGUI GUI = new RoadMonitorGUI();
-        GUI.setVisible(true);
+//        RoadMonitorGUI GUI = new RoadMonitorGUI();
+//        GUI.setVisible(true);
+    
+        
     }
 }
