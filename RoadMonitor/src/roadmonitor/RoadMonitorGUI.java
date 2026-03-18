@@ -5,43 +5,91 @@ package roadmonitor;
  * @author Nikolas Misins
  */
 public class RoadMonitorGUI extends javax.swing.JFrame {
-    
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(RoadMonitorGUI.class.getName());
 
+    PriorityQueue issueList;
+    Stack historyList;
+    
     /**
      * Creates new form RoadMonitorGUI
      */
     public RoadMonitorGUI() {
         initComponents();
+        
         viewTrafficMode();
+        issueList = new PriorityQueue();
+        historyList = new Stack();
+        loadDemoData();
+        
     }
     
     //misc methods
+
+    /**
+     * sets the GUI to let the user see issues affecting traffic
+     */
     public void viewTrafficMode(){
         weatherWarningBTN.setVisible(false);
         emergencyBTN.setVisible(false);
         constructionBTN.setVisible(false);
         eventBTN.setVisible(false);
         miscBTN.setVisible(false);
+        eventDescTF.setVisible(false);
+        addBTN.setVisible(false);
+        EventTypeLBL.setVisible(false);
         
         statusLBL.setVisible(true);
         statusIndicatorTF.setVisible(true);
-        jScrollPane1.setVisible(true);
+        displayTA.setText("Current traffic events in Docklands:\n\n");
     }
     
+    /**
+     * sets GUI to let user make/delete issues affecting traffic and history
+     */
     public void editIssuesMode(){
         weatherWarningBTN.setVisible(true);
         emergencyBTN.setVisible(true);
         constructionBTN.setVisible(true);
         eventBTN.setVisible(true);
         miscBTN.setVisible(true);
+        eventDescTF.setVisible(true);
+        addBTN.setVisible(true);
+        EventTypeLBL.setVisible(true);
         
         statusLBL.setVisible(false);
         statusIndicatorTF.setVisible(false);
-        jScrollPane1.setVisible(false);
+        displayTA.setText("History of traffic events in Docklands:\n\n");
     }
-        
-
+    
+    /**
+     * For adding a current issue to the priority queue
+     */
+    public void logIssue(){
+        //todo
+    }
+    
+    /**
+     * dequeue the top current traffic issue
+     */
+    public void dequeueIssue(){
+        //todo
+    }
+    
+    /**
+     * Fabricates some existing data into the ADTs for the purpose of testing and showing that it works quickly. Better
+     * than hardcoding the data into the ADTs obviously.
+     */
+    public void loadDemoData(){
+        //todo
+    }
+    
+    /**
+     * TO be called after any kind of change to ADTs so that the user has up-to-date data on the dashboard.
+     */
+    public void updateview(){
+        //todo
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -65,6 +113,9 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
         LogIssuesBTN = new javax.swing.JRadioButton();
         statusIndicatorTF = new javax.swing.JTextField();
         miscBTN = new javax.swing.JRadioButton();
+        addBTN = new javax.swing.JButton();
+        eventDescTF = new javax.swing.JTextField();
+        EventTypeLBL = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(153, 255, 153));
@@ -73,6 +124,7 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
         Title.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         Title.setText("RoadMonitor");
 
+        displayTA.setEditable(false);
         displayTA.setColumns(20);
         displayTA.setRows(5);
         jScrollPane1.setViewportView(displayTA);
@@ -105,7 +157,7 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
 
         formType.add(ViewIssuesBTN);
         ViewIssuesBTN.setSelected(true);
-        ViewIssuesBTN.setText("View Traffic");
+        ViewIssuesBTN.setText("View Current Traffic");
         ViewIssuesBTN.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ViewIssuesBTNActionPerformed(evt);
@@ -132,6 +184,30 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
             }
         });
 
+        addBTN.setText("log event");
+        addBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBTNActionPerformed(evt);
+            }
+        });
+
+        eventDescTF.setBackground(new java.awt.Color(204, 204, 204));
+        eventDescTF.setForeground(new java.awt.Color(0, 0, 0));
+        eventDescTF.setText("Describe Traffic Event here");
+        eventDescTF.setAutoscrolls(false);
+        eventDescTF.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                eventDescTFMouseReleased(evt);
+            }
+        });
+        eventDescTF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eventDescTFActionPerformed(evt);
+            }
+        });
+
+        EventTypeLBL.setText("Event Type");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -144,47 +220,57 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(201, 201, 201)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(constructionBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(emergencyBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(eventBTN)
-                                        .addComponent(miscBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(weatherWarningBTN)
-                                        .addGap(4, 4, 4))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(ViewIssuesBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(LogIssuesBTN))
-                                .addContainerGap())))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(statusLBL)
                         .addGap(18, 18, 18)
                         .addComponent(statusIndicatorTF, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(LogIssuesBTN)
+                                        .addGap(22, 22, 22))
+                                    .addComponent(ViewIssuesBTN, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(EventTypeLBL)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(constructionBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(emergencyBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(eventBTN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(miscBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(weatherWarningBTN)
+                                                .addGap(4, 4, 4))))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(52, 52, 52)
+                                .addComponent(addBTN)
+                                .addGap(0, 0, Short.MAX_VALUE))))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(eventDescTF, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(20, Short.MAX_VALUE)
                 .addComponent(Title)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(25, 25, 25)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(statusLBL)
+                    .addComponent(statusIndicatorTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(eventDescTF, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(statusLBL)
-                            .addComponent(statusIndicatorTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(25, 25, 25)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(addBTN)
+                        .addGap(44, 44, 44)
+                        .addComponent(EventTypeLBL)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(weatherWarningBTN)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(emergencyBTN)
@@ -194,11 +280,12 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
                         .addComponent(eventBTN)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(miscBTN)
-                        .addGap(85, 85, 85)
-                        .addComponent(ViewIssuesBTN)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(LogIssuesBTN)
-                        .addGap(23, 23, 23))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(ViewIssuesBTN))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(LogIssuesBTN)
+                .addGap(12, 12, 12))
         );
 
         pack();
@@ -223,6 +310,18 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
     private void miscBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miscBTNActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_miscBTNActionPerformed
+
+    private void addBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBTNActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addBTNActionPerformed
+
+    private void eventDescTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventDescTFActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_eventDescTFActionPerformed
+
+    private void eventDescTFMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eventDescTFMouseReleased
+        eventDescTF.setText("");
+    }//GEN-LAST:event_eventDescTFMouseReleased
 
     /**
      * @param args the command line arguments
@@ -251,13 +350,16 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup EventType;
+    private javax.swing.JLabel EventTypeLBL;
     private javax.swing.JRadioButton LogIssuesBTN;
     private javax.swing.JLabel Title;
     private javax.swing.JRadioButton ViewIssuesBTN;
+    private javax.swing.JButton addBTN;
     private javax.swing.JRadioButton constructionBTN;
     private javax.swing.JTextArea displayTA;
     private javax.swing.JRadioButton emergencyBTN;
     private javax.swing.JRadioButton eventBTN;
+    private javax.swing.JTextField eventDescTF;
     private javax.swing.ButtonGroup formType;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JRadioButton miscBTN;
