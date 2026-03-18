@@ -48,6 +48,7 @@ public class SinglyLinkedList implements SLLInterface{
         }else{
             head=head.getNext();
         }
+        size--;
     }
 
     @Override

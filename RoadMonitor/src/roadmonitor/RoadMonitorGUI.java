@@ -1,5 +1,7 @@
 package roadmonitor;
 
+import java.awt.Color;
+
 /**
  *
  * @author Nikolas Misins
@@ -38,6 +40,7 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
         eventDescTF.setVisible(false);
         addBTN.setVisible(false);
         EventTypeLBL.setVisible(false);
+        popBTN.setVisible(true);
         
         statusLBL.setVisible(true);
         statusIndicatorTF.setVisible(true);
@@ -58,6 +61,7 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
         eventDescTF.setVisible(true);
         addBTN.setVisible(true);
         EventTypeLBL.setVisible(true);
+        popBTN.setVisible(false);
         
         statusLBL.setVisible(false);
         statusIndicatorTF.setVisible(false);
@@ -97,11 +101,16 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
      * dequeue the top current traffic issue
      */
     public void dequeueIssue(){
+        int s = issueList.size();
+        if (s>0){
         //issueList.peek() returns top
         //put that into stack
         historyList.push(issueList.peek());
+        
         //dequeue theList
         issueList.dequeue();
+        updateView();
+        }
     }
     
     /**
@@ -111,6 +120,10 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
      */
     public void loadDemoData(){
         Issue i = new Issue("Orange Flood Weather Warning for the Dublin Area",1);
+        issueList.enqueue(i);
+        i = new Issue ("Construction on Cardiff Lane",4);
+        issueList.enqueue(i);
+        i = new Issue ("burning building on Benson Street",2);
         issueList.enqueue(i);
         
         Issue p = new Issue("Saint Patrick's day parade",3);
@@ -122,10 +135,23 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
      */
     public void updateView(){
         if (ViewIssuesBTN.isSelected()){
-            displayTA.append(issueList.printList());
+            displayTA.setText("Current traffic events in Docklands:\n\n" + issueList.printList());
         }else{
             String toShow = historyList.peek().getDescription() + ", it had a priority impact level of " + historyList.peek().getPriority();
-            displayTA.append(toShow);
+            displayTA.setText(toShow);
+        }
+        
+        //the dashboard color changes based on number of events
+        int s = issueList.size();
+        if (s<2){
+            statusIndicatorTF.setBackground(Color.green);
+            statusIndicatorTF.setText("Green");
+        }else if(s==2){
+            statusIndicatorTF.setBackground(Color.orange);
+            statusIndicatorTF.setText("Orange");
+        }else{
+            statusIndicatorTF.setBackground(Color.red);
+            statusIndicatorTF.setText("Red");
         }
     }
     
@@ -155,6 +181,7 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
         addBTN = new javax.swing.JButton();
         eventDescTF = new javax.swing.JTextField();
         EventTypeLBL = new javax.swing.JLabel();
+        popBTN = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(153, 255, 153));
@@ -169,7 +196,7 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
         jScrollPane1.setViewportView(displayTA);
 
         statusLBL.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        statusLBL.setText("Dockland Status:");
+        statusLBL.setText("Dockland Traffic Status:");
 
         EventType.add(weatherWarningBTN);
         weatherWarningBTN.setSelected(true);
@@ -247,6 +274,13 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
 
         EventTypeLBL.setText("Event Type");
 
+        popBTN.setText("pop most latest issue");
+        popBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                popBTNActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -265,10 +299,9 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(LogIssuesBTN)
@@ -285,8 +318,14 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
                                                 .addComponent(weatherWarningBTN)
                                                 .addGap(4, 4, 4))))))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(addBTN)
-                                .addGap(0, 0, Short.MAX_VALUE))))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(68, 68, 68)
+                                        .addComponent(addBTN))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addComponent(popBTN)))
+                                .addGap(0, 85, Short.MAX_VALUE))))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(eventDescTF, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -307,7 +346,9 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(addBTN)
-                        .addGap(44, 44, 44)
+                        .addGap(9, 9, 9)
+                        .addComponent(popBTN)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(EventTypeLBL)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(weatherWarningBTN)
@@ -362,6 +403,10 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
         eventDescTF.setText("");
     }//GEN-LAST:event_eventDescTFMouseReleased
 
+    private void popBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popBTNActionPerformed
+        dequeueIssue();
+    }//GEN-LAST:event_popBTNActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -402,6 +447,7 @@ public class RoadMonitorGUI extends javax.swing.JFrame {
     private javax.swing.ButtonGroup formType;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JRadioButton miscBTN;
+    private javax.swing.JButton popBTN;
     private javax.swing.JTextField statusIndicatorTF;
     private javax.swing.JLabel statusLBL;
     private javax.swing.JRadioButton weatherWarningBTN;

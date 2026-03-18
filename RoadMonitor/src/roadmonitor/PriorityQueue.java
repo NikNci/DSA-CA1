@@ -36,7 +36,7 @@ public class PriorityQueue implements PQInterface{
     }
     
     public Issue peek(){
-        return theList.get(0);
+        return theList.getTop();
     }
     
 }
